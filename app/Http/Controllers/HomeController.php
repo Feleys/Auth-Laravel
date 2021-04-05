@@ -69,6 +69,6 @@ class HomeController extends Controller
                 'key'   => 'created_at'
             ],
         ];
-        return view('home', ['collects' => Collect::all(), 'columns' => $columns]);
+        return view('home', ['collects' => Collect::orderBy('created_at', 'DESC')->get(), 'columns' => $columns]);
     }
 }
