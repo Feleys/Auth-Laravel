@@ -1,3 +1,5 @@
+[Demo](http://3.139.99.76:8000/login)
+
 ## Custom auth
 ````
 app/Http/Controllers/Auth/LoginController.php
