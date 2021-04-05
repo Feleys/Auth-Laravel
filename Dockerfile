@@ -1,9 +1,5 @@
 FROM ubuntu:20.04
 
-LABEL maintainer="Taylor Otwell"
-
-ARG WWWGROUP
-
 WORKDIR /var/www/html
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -43,5 +39,6 @@ RUN apt-get update \
 
 RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.0
 
-EXPOSE 80
-CMD php artisan serve
+ENV HOST 0.0.0.0
+EXPOSE 8000
+CMD php artisan serve --host 0.0.0.0
