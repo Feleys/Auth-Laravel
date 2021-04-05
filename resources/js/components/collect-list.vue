@@ -4,7 +4,7 @@
       striped
       :items="items"
       :fields="fields"
-      :items-per-page="5"
+      :items-per-page="20"
       pagination
       :addTableClasses="min-width"
   >

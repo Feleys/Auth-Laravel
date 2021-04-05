@@ -1,5 +1,12 @@
 [Demo](http://3.139.99.76:8000/login)
 
+## DB
+````
+DB/collects.sql
+DB/DB_Schema.sql
+DB/users.sql
+````
+
 ## Custom auth
 ````
 app/Http/Controllers/Auth/LoginController.php
