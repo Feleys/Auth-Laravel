@@ -1,11 +1,11 @@
 # For more information: https://laravel.com/docs/sail
 version: '3'
 services:
-    laravel.test:
+    backend:
+        container_name: auth_backend
         build:
-            context: ./vendor/laravel/sail/runtimes/8.0
+            context: .
             dockerfile: Dockerfile
-        image: sail-8.0/app
         ports:
             - '80:80'
         volumes:
