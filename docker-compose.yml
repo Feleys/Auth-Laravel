@@ -23,7 +23,7 @@ services:
         environment:
             MYSQL_ROOT_PASSWORD: 'root'
             MYSQL_DATABASE: 'auth'
-            MYSQL_USER: 'root'
+            MYSQL_USER: 'feleys'
             MYSQL_PASSWORD: 'root'
             MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
         volumes:

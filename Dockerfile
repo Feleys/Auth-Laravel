@@ -43,5 +43,5 @@ RUN apt-get update \
 
 RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.0
 
-EXPOSE 8000
+EXPOSE 80
 CMD php artisan serve
