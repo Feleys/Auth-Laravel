@@ -43,14 +43,5 @@ RUN apt-get update \
 
 RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.0
 
-RUN groupadd --force -g www-data sail
-RUN useradd -ms /bin/bash --no-user-group -g www-data -u 1337 sail
-
-COPY start-container /usr/local/bin/start-container
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY php.ini /etc/php/8.0/cli/conf.d/99-sail.ini
-RUN chmod +x /usr/local/bin/start-container
-
 EXPOSE 8000
-
-ENTRYPOINT ["start-container"]
+CMD php artisan serve
