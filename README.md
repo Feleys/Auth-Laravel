@@ -1,4 +1,4 @@
-[Demo](http://3.139.115.130:8000/login)
+[Demo](http://kyrie.ddns.net:8000/login)
 
 ## Google Login
 ````
