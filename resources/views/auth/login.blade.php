@@ -50,6 +50,11 @@
                         class="w-full select-none font-bold whitespace-no-wrap p-3 rounded-lg text-base leading-normal no-underline text-gray-100 bg-blue-500 hover:bg-blue-700 sm:py-4">
                             {{ __('Login') }}
                         </button>
+                        <div style="padding:10px;"></div>
+                        <button href="{{$googleAuthUrl}}"
+                           class="w-full select-none font-bold whitespace-no-wrap p-3 rounded-lg text-base leading-normal no-underline text-gray-100 bg-blue-500 hover:bg-blue-700 sm:py-4">
+                            {{ __('Login with Google') }}
+                        </button>
 
                         @if (Route::has('register'))
                         <p class="w-full text-xs text-center text-gray-700 my-6 sm:text-sm sm:my-8">

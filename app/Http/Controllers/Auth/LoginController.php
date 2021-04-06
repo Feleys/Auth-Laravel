@@ -3,13 +3,17 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Library\GoogleOAuthLogin;
 use Illuminate\Http\Request;
 use App\Library\Contracts\CustomAuthInterface;
+
 class LoginController extends Controller
 {
+
     public function index()
     {
-        return view('auth.login');
+        $this->middleware('guest');
+        return view('auth.login', ['googleAuthUrl' => GoogleOAuthLogin::googleLogin()->authUrl()]);
     }
 
     public function login(Request $request, CustomAuthInterface $auth)
@@ -33,5 +37,16 @@ class LoginController extends Controller
     public function home()
     {
         return view('home');
+    }
+
+    public function googleRedirectHandler(Request $request)
+    {
+        try{
+            GoogleOAuthLogin::googleLogin()->login($request);
+            return redirect('/home');
+        } catch (\Exception $e){
+            toastr()->error($e->getMessage(), 'Error');
+            return redirect('/login');
+        }
     }
 }

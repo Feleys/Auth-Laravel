@@ -27,6 +27,8 @@ Route::get('login', [LoginController::class, 'index'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
+// google
+Route::get('/google.redirect', [LoginController::class, 'googleRedirectHandler']);
 
 Route::group(['middleware' => 'auth'], function(){
     Route::get('/home', [HomeController::class, 'index'])->name('home');
