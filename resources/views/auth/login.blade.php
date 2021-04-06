@@ -20,7 +20,7 @@
 
                         <input id="email" type="email"
                             class="form-input w-full @error('email') border-red-500 @enderror" name="email"
-                            value="{{ old('email') }}" required autocomplete="email" autofocus>
+                            value="{{ old('email') }}" autocomplete="email" autofocus>
 
                         @error('email')
                         <p class="text-red-500 text-xs italic mt-4">
@@ -35,8 +35,7 @@
                         </label>
 
                         <input id="password" type="password"
-                            class="form-input w-full @error('password') border-red-500 @enderror" name="password"
-                            required>
+                            class="form-input w-full @error('password') border-red-500 @enderror" name="password">
 
                         @error('password')
                         <p class="text-red-500 text-xs italic mt-4">
@@ -51,7 +50,7 @@
                             {{ __('Login') }}
                         </button>
                         <div style="padding:10px;"></div>
-                        <button href="{{$googleAuthUrl}}"
+                        <button onclick="location.href='{{$googleAuthUrl}}'" type="button"
                            class="w-full select-none font-bold whitespace-no-wrap p-3 rounded-lg text-base leading-normal no-underline text-gray-100 bg-blue-500 hover:bg-blue-700 sm:py-4">
                             {{ __('Login with Google') }}
                         </button>
