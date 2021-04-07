@@ -14,8 +14,14 @@ use Illuminate\Support\Str;
 
 class GoogleOAuthLogin implements GoogleOAuthLoginInterface
 {
+    /**
+     * @var array
+     */
     protected array $config = [];
 
+    /**
+     * GoogleOAuthLogin constructor.
+     */
     public function __construct()
     {
         if(!$this->config){
@@ -28,8 +34,15 @@ class GoogleOAuthLogin implements GoogleOAuthLoginInterface
         }
     }
 
+    /**
+     * @var Google_Client|null
+     */
     public ?Google_Client $client = null;
 
+    /**
+     * @param Google_Client $client
+     * @return $this
+     */
     public function initGoogle(Google_Client $client): static
     {
         $client->setClientId($this->config['client_id']);
@@ -41,11 +54,18 @@ class GoogleOAuthLogin implements GoogleOAuthLoginInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function authUrl(): string
     {
         return $this->client->createAuthUrl();
     }
 
+    /**
+     * @param $code
+     * @return \Google_Service_Oauth2_Userinfo
+     */
     public function user($code): \Google_Service_Oauth2_Userinfo
     {
         $token = $this->client->fetchAccessTokenWithAuthCode($code);
@@ -55,12 +75,19 @@ class GoogleOAuthLogin implements GoogleOAuthLoginInterface
         return $googleOauth->userinfo->get();
     }
 
+    /**
+     * @return $this
+     */
     public function getConfig()
     {
         $this->config = Config::get('app.google');
         return $this;
     }
 
+    /**
+     * @param Request $request
+     * @throws \Exception
+     */
     public function login(Request $request)
     {
         $code = $request->code;
@@ -82,6 +109,9 @@ class GoogleOAuthLogin implements GoogleOAuthLoginInterface
         }
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
     public static function provider()
     {
         return app(GoogleOAuthLogin::class);

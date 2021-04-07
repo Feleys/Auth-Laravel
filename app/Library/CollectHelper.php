@@ -6,57 +6,14 @@ use App\Models\CollectLog;
 use Goutte\Client as GoutteClient;
 use Illuminate\Support\Facades\DB;
 
-class CollectHelper{
+class CollectHelper
+{
 
     public function init()
     {
-        $client = new GoutteClient();
-
-        /*
-         * column => 對應db欄位名稱
-         * class => 目標網頁selector class
-         * type => 新增type進行個別字串處理
-         * */
-        $columns = [
-            ['column' => 'name', 'class' => '.TODAY_CONTENT h3', 'type' => 'name'],
-            ['column' => 'general_score', 'class' => '.txt_green', 'type' => 'score'],
-            ['column' => 'general_description', 'class' => 'div.TODAY_CONTENT > p:nth-child(3)', 'type' => 'description'],
-            ['column' => 'love_score', 'class' => '.txt_pink', 'type' => 'score'],
-            ['column' => 'love_description', 'class' => 'div.TODAY_CONTENT > p:nth-child(5)', 'type' => 'description'],
-            ['column' => 'career_score', 'class' => '.txt_blue', 'type' => 'score'],
-            ['column' => 'career_description', 'class' => 'div.TODAY_CONTENT > p:nth-child(7)', 'type' => 'description'],
-            ['column' => 'money_score', 'class' => '.txt_orange', 'type' => 'score'],
-            ['column' => 'money_description', 'class' => 'div.TODAY_CONTENT > p:nth-child(9)', 'type' => 'description'],
-        ];
-        $tempErrorMessage = [];
-
         DB::beginTransaction();
         try {
-            // 共12星座
-            foreach ( range(0, 11) as $idx => $value ){
-                $url = 'https://astro.click108.com.tw/daily_10.php?iAstro=' . $idx;
-                $crawler = $client->request('GET', $url);
-                $createData = ['collect_date' => date('Y-m-d'), 'created_at' => date('Y-m-d H:i:s')];
-
-                // 抓取欄位
-                foreach ( $columns as $columnIdx => $column ){
-                    $res = match ($column['type']) {
-                        'name' => $this->dealWithName($crawler, $idx, $columns[$columnIdx]),
-                        'score' => $this->dealWithScore($crawler, $idx, $columns[$columnIdx]),
-                        default => $this->dealWithDefault($crawler, $idx, $columns[$columnIdx]),
-                    };
-                    $createData[$column['column']] = $res['data'];
-                    if($res['errorMessage']){
-                        $tempErrorMessage[] = $res['errorMessage'];
-                    }
-                }
-
-                Collect::create($createData);
-            }
-
-            if (count($tempErrorMessage) > 0) {
-                CollectLog::create(['message' => implode(', ', $tempErrorMessage), 'created_at' => date('Y-m-d H:i:s')]);
-            }
+            $this->dataProcess();
             DB::commit();
         } catch (\Exception $ex) {
             DB::rollback();
@@ -119,5 +76,61 @@ class CollectHelper{
             $res['errorMessage'] = $errorMessage;
         }
         return $res;
+    }
+
+    /**
+     * column => 對應db欄位名稱
+     * class => 目標網頁selector class
+     * type => 新增type進行個別字串處理
+     * @return \string[][]
+     */
+    protected function columns(): array
+    {
+        return [
+            ['column' => 'name', 'class' => '.TODAY_CONTENT h3', 'type' => 'name'],
+            ['column' => 'general_score', 'class' => '.txt_green', 'type' => 'score'],
+            ['column' => 'general_description', 'class' => 'div.TODAY_CONTENT > p:nth-child(3)', 'type' => 'description'],
+            ['column' => 'love_score', 'class' => '.txt_pink', 'type' => 'score'],
+            ['column' => 'love_description', 'class' => 'div.TODAY_CONTENT > p:nth-child(5)', 'type' => 'description'],
+            ['column' => 'career_score', 'class' => '.txt_blue', 'type' => 'score'],
+            ['column' => 'career_description', 'class' => 'div.TODAY_CONTENT > p:nth-child(7)', 'type' => 'description'],
+            ['column' => 'money_score', 'class' => '.txt_orange', 'type' => 'score'],
+            ['column' => 'money_description', 'class' => 'div.TODAY_CONTENT > p:nth-child(9)', 'type' => 'description'],
+        ];
+    }
+
+    /**
+     * 爬來的資料處理後存進資料庫
+     */
+    protected function dataProcess()
+    {
+        $client = new GoutteClient();
+        $tempErrorMessage = [];
+
+        // 共12星座
+        foreach ( range(0, 11) as $idx => $value ){
+            $url = 'https://astro.click108.com.tw/daily_10.php?iAstro=' . $idx;
+            $crawler = $client->request('GET', $url);
+            $createData = ['collect_date' => date('Y-m-d'), 'created_at' => date('Y-m-d H:i:s')];
+            $columns = $this->columns();
+            // 抓取欄位
+            foreach ( $this->columns() as $columnIdx => $column ){
+                $res = match ($column['type']) {
+                    'name' => $this->dealWithName($crawler, $idx, $columns[$columnIdx]),
+                    'score' => $this->dealWithScore($crawler, $idx, $columns[$columnIdx]),
+                    default => $this->dealWithDefault($crawler, $idx, $columns[$columnIdx]),
+                };
+                $createData[$column['column']] = $res['data'];
+                if($res['errorMessage']){
+                    $tempErrorMessage[] = $res['errorMessage'];
+                }
+            }
+
+            Collect::create($createData);
+        }
+
+        if (count($tempErrorMessage) > 0) {
+            CollectLog::create(['message' => implode(', ', $tempErrorMessage), 'created_at' => date('Y-m-d H:i:s')]);
+        }
     }
 }

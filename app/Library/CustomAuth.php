@@ -11,6 +11,10 @@ use Illuminate\Http\Request;
 
 class CustomAuth implements CustomAuthInterface
 {
+    /**
+     * @param Request $request
+     * @return bool
+     */
     public function login(Request $request)
     {
         $request->validate([
@@ -30,6 +34,9 @@ class CustomAuth implements CustomAuthInterface
         Auth::logout();
     }
 
+    /**
+     * @param Request $request
+     */
     public function register(Request $request)
     {
         $request->validate([
@@ -46,6 +53,9 @@ class CustomAuth implements CustomAuthInterface
         ]);
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|mixed
+     */
     public static function provider()
     {
         return app(CustomAuth::class);
