@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Library\CustomAuth;
 use App\Library\GoogleOAuthLogin;
 use Illuminate\Support\ServiceProvider;
 
@@ -15,7 +14,7 @@ class GoogleOAuthLoginServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(GoogleOAuthLogin::class, function ($app) {
+        $this->app->singleton('App\Library\Contracts\GoogleOAuthLoginInterface', function ($app) {
             return new GoogleOAuthLogin();
         });
     }
