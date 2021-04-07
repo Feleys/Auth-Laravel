@@ -14,7 +14,7 @@ class CustomAuthServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('App\Library\CustomAuth', function ($app) {
+        $this->app->bind('App\Library\Contracts\CustomAuthInterface', function ($app) {
             return new CustomAuth();
         });
     }
