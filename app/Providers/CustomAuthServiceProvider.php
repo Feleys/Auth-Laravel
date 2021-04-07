@@ -14,7 +14,9 @@ class CustomAuthServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind('App\Library\CustomAuth', function ($app) {
+            return new CustomAuth();
+        });
     }
 
     /**
@@ -24,8 +26,6 @@ class CustomAuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->bind('App\Library\Contracts\CustomAuthInterface', function ($app) {
-            return new CustomAuth();
-        });
+        //
     }
 }

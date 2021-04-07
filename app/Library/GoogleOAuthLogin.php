@@ -82,7 +82,7 @@ class GoogleOAuthLogin implements GoogleOAuthLoginInterface
         }
     }
 
-    public static function googleLogin()
+    public static function provider()
     {
         return app(GoogleOAuthLogin::class);
     }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Library\GoogleOAuthLogin;
 use Illuminate\Http\Request;
-use App\Library\Contracts\CustomAuthInterface;
+use App\Library\CustomAuth;
 
 class LoginController extends Controller
 {
@@ -13,12 +13,12 @@ class LoginController extends Controller
     public function index()
     {
         $this->middleware('guest');
-        return view('auth.login', ['googleAuthUrl' => GoogleOAuthLogin::googleLogin()->authUrl()]);
+        return view('auth.login', ['googleAuthUrl' => GoogleOAuthLogin::provider()->authUrl()]);
     }
 
-    public function login(Request $request, CustomAuthInterface $auth)
+    public function login(Request $request)
     {
-        if($auth->login($request)){
+        if(CustomAuth::provider()->login($request)){
             toastr()->success('login successfully!', 'Success');
             return redirect()->intended('home');
         }
@@ -27,9 +27,9 @@ class LoginController extends Controller
         return redirect('login');
     }
 
-    public function logout(CustomAuthInterface $auth)
+    public function logout()
     {
-        $auth->logout();
+        CustomAuth::provider()->logout();
         toastr()->success('logout successfully!', 'Success');
         return redirect('login');
     }
@@ -42,7 +42,7 @@ class LoginController extends Controller
     public function googleRedirectHandler(Request $request)
     {
         try{
-            GoogleOAuthLogin::googleLogin()->login($request);
+            GoogleOAuthLogin::provider()->login($request);
             return redirect('/home');
         } catch (\Exception $e){
             toastr()->error($e->getMessage(), 'Error');

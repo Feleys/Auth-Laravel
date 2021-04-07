@@ -27,8 +27,6 @@ class GoogleOAuthLoginServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->bind('App\Library\Contracts\CustomAuthInterface', function ($app) {
-            return new CustomAuth();
-        });
+        //
     }
 }

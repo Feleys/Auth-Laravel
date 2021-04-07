@@ -45,4 +45,9 @@ class CustomAuth implements CustomAuthInterface
             'password' => Hash::make($request->password),
         ]);
     }
+
+    public static function provider()
+    {
+        return app(CustomAuth::class);
+    }
 }
