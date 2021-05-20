@@ -175,8 +175,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Yoeunes\Toastr\ToastrServiceProvider::class,
-        App\Providers\CustomAuthServiceProvider::class,
-        App\Providers\GoogleOAuthLoginServiceProvider::class,
     ],
 
     /*
@@ -229,7 +227,6 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'GoogleOauthLogin' => App\Providers\GoogleOAuthLoginServiceProvider::class,
     ],
 
     'google' => [

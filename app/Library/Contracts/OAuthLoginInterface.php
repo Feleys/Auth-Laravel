@@ -3,7 +3,7 @@ namespace App\Library\Contracts;
 
 use Illuminate\Http\Request;
 
-Interface GoogleOAuthLoginInterface
+Interface OAuthLoginInterface
 {
     public function authUrl();
     public function user($code);

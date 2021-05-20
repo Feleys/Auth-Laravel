@@ -22,7 +22,7 @@ class CustomAuth implements CustomAuthInterface
             'password' => 'required|string',
         ]);
 
-        if (Auth::attempt($request->only('email', 'password'))) {
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'login_type' => LOGIN_TYPE_DEFAULT])) {
             toastr()->success('login successfully!', 'Success');
             return True;
         }
@@ -50,6 +50,7 @@ class CustomAuth implements CustomAuthInterface
             'name'     => $request->name,
             'email'    => $request->email,
             'password' => Hash::make($request->password),
+            'login_type' => LOGIN_TYPE_DEFAULT
         ]);
     }
 

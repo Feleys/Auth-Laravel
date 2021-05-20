@@ -8,8 +8,11 @@ use App\Library\Contracts\CustomAuthInterface;
 
 class RegisterController extends Controller
 {
-    public function __construct()
+    private $customAuth;
+
+    public function __construct(CustomAuthInterface $CustomAuthInterface)
     {
+        $this->customAuth = $CustomAuthInterface;
         $this->middleware('guest');
     }
 
@@ -18,10 +21,15 @@ class RegisterController extends Controller
         return view('auth.register');
     }
 
-    public function register(Request $request, CustomAuthInterface $auth)
+    public function register(Request $request)
     {
-        $auth->register($request);
-        toastr()->success('Register successfully!', 'Success');
-        return redirect('login');
+        try{
+            $this->customAuth->register($request);
+            toastr()->success('Register successfully!', 'Success');
+            return redirect('login');
+        } catch (\Exception $e){
+            toastr()->error($e->getMessage(), 'Error');
+            return redirect('register');
+        }
     }
 }

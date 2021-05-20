@@ -2,7 +2,7 @@
 
 namespace App\Library;
 
-use App\Library\Contracts\GoogleOAuthLoginInterface;
+use App\Library\Contracts\OAuthLoginInterface;
 use App\Models\User;
 use Google_Client;
 use Google_Service_Oauth2;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 
-class GoogleOAuthLogin implements GoogleOAuthLoginInterface
+class GoogleOAuthLogin implements OAuthLoginInterface
 {
     /**
      * @var array
@@ -24,11 +24,11 @@ class GoogleOAuthLogin implements GoogleOAuthLoginInterface
      */
     public function __construct()
     {
-        if(!$this->config){
+        if (!$this->config) {
             $this->getConfig();
         }
 
-        if(!$this->client){
+        if (!$this->client) {
             $client = new Google_Client();
             $this->initGoogle($client);
         }
@@ -91,18 +91,24 @@ class GoogleOAuthLogin implements GoogleOAuthLoginInterface
     public function login(Request $request)
     {
         $code = $request->code;
-        if(!$code){
+        if (!$code) {
             throw new \Exception('google login error');
         }
         $user = $this->user($code);
-        $existingUser = User::where('email', $user->email)->first();
-        if($existingUser){
+        $existingUser = User::where(['email' => $user->email, 'login_type' => LOGIN_TYPE_GOOGLE])->first();
+        if ($existingUser) {
             auth()->login($existingUser);
         } else {
+            $existEmail = User::where('email', $user->email)->first();
+            if ($existEmail) {
+                throw new \Exception('Email exist');
+            }
+
             $create = [
-                'name' => $user->name,
-                'email' => $user->email,
-                'password' => Hash::make(Str::random(10))
+                'name'       => $user->name,
+                'email'      => $user->email,
+                'password'   => Hash::make('asd'),
+                'login_type' => LOGIN_TYPE_GOOGLE
             ];
             $user = User::create($create);
             auth()->login($user);

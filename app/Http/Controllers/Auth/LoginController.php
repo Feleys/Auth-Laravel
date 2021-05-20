@@ -3,12 +3,26 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Library\Contracts\CustomAuthInterface;
+use App\Library\Contracts\OAuthLoginInterface;
 use App\Library\GoogleOAuthLogin;
 use Illuminate\Http\Request;
 use App\Library\CustomAuth;
 
 class LoginController extends Controller
 {
+
+    private $OAuthLogin;
+    private $customAuth;
+
+    public function __construct(
+        OAuthLoginInterface $OAuthLoginInterface,
+        CustomAuthInterface $CustomAuthInterface
+    )
+    {
+        $this->OAuthLogin = $OAuthLoginInterface;
+        $this->customAuth = $CustomAuthInterface;
+    }
 
     public function index()
     {
@@ -18,7 +32,7 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        if(CustomAuth::provider()->login($request)){
+        if($this->customAuth->login($request)){
             toastr()->success('login successfully!', 'Success');
             return redirect()->intended('home');
         }
@@ -29,7 +43,7 @@ class LoginController extends Controller
 
     public function logout()
     {
-        CustomAuth::provider()->logout();
+        $this->customAuth->logout();
         toastr()->success('logout successfully!', 'Success');
         return redirect('login');
     }
@@ -42,7 +56,7 @@ class LoginController extends Controller
     public function googleRedirectHandler(Request $request)
     {
         try{
-            GoogleOAuthLogin::provider()->login($request);
+            $this->OAuthLogin->login($request);
             return redirect('/home');
         } catch (\Exception $e){
             toastr()->error($e->getMessage(), 'Error');
